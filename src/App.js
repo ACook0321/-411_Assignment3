@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import User from './components/user'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () => {
+  const [listUsers, setUsers] = useState([])
+  const [isLoaded, setLoaded] = useState(false)
+
+  useEffect(() => {
+    fetch('https://randomuser.me/api?results=25')
+      .then(res => res.json())
+      .then(data => {
+        setLoaded(true)
+        setUsers(data.results)
+      })
+  }, [])
+
+  if(!isLoaded) {
+    return <div>Loading...</div>
+  } else {
+    return (
+      <div className='container'>
+        {listUsers.map(( user, index ) => {
+          return <User key={index} user={user} />
+        })}
+      </div>
+    )
+  }
 }
 
 export default App;
